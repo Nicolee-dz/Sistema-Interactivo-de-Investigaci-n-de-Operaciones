@@ -1,0 +1,3 @@
+class simplexMinModel extends simplexBaseModel{
+    
+}

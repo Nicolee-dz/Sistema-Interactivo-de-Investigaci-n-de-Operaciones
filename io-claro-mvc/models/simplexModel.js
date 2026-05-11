@@ -11,11 +11,11 @@ const SimplexModel = {
    * @param {number[]}   objetivo     Coeficientes de Z  [c1, c2, ...]
    * @param {number[][]} restricciones  Coeficientes de cada restricción
    * @param {number[]}   rhs          Lado derecho de cada restricción
-   * @returns {object}  { zOptimo, variables }
+   * @returns {object}  { zOptimo, variables }S
    */
   maximizar(objetivo, restricciones, rhs) {
-    // TODO: implementar algoritmo Simplex maximización
-    return null;
+    const simplex=new simplexMaxModel();
+    return simplex.maximizar(objetivo,restricciones,rhs);
   },
 
   /**
@@ -29,6 +29,7 @@ const SimplexModel = {
   minimizar(objetivo, restricciones, relaciones, rhs) {
     // TODO: implementar algoritmo Simplex minimización
     return null;
-  }
+  },
 
+  
 };

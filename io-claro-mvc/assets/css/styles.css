@@ -1,11 +1,26 @@
 /* =============================================
    Investigación de Operaciones — styles.css
-   Versión clara
+   Versión Precisión Académica · Paleta Pastel
    ============================================= */
 
+:root {
+  --color-fondo:             #CDD4DC;   /* gris azulado medio — fondo general */
+  --color-superficie:        #D8DFE6;   /* inputs y filas */
+  --color-tarjeta:           #E2E7ED;   /* cards */
+  --color-texto:             #111111;
+  --color-primario:          #A3CEF1;
+  --color-interaccion:       #CBB4F5;
+  --color-exito:             #C9F7F5;
+  --color-primario-hover:    #7ABDE8;
+  --color-interaccion-hover: #B49AED;
+  --color-borde:             rgba(51, 65, 85, 0.25);
+  --color-navbar:            #BEC7D1;
+  --color-footer:            #BEC7D1;
+}
+
 body {
-  background-color: #f0f4f8;
-  color: #1e293b;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
   font-family: 'Segoe UI', sans-serif;
   min-height: 100vh;
   display: flex;
@@ -14,8 +29,9 @@ body {
 
 /* Navbar */
 .navbar {
-  background-color: #ffffff;
-  border-bottom: 1px solid #cbd5e1;
+  background-color: var(--color-navbar);
+  border-bottom: 1px solid var(--color-borde);
+  box-shadow: 0 1px 6px rgba(100, 116, 139, 0.12);
 }
 
 /* Hero (solo index) */
@@ -28,41 +44,48 @@ body {
 }
 
 .subtitulo {
-  color: #64748b;
+  color: #1a1a1a;
   font-size: 1rem;
 }
 
 /* Tarjetas del index */
 .card-metodo {
-  background-color: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 12px;
+  background-color: var(--color-tarjeta);
+  border: 1.5px solid var(--color-borde);
+  border-radius: 14px;
   padding: 30px 24px;
   text-decoration: none;
-  color: #1e293b;
+  color: var(--color-texto);
   display: block;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .card-metodo:hover {
   transform: translateY(-4px);
-  color: #1e293b;
+  color: var(--color-texto);
 }
 
-.card-max:hover { box-shadow: 0 6px 24px rgba(22,163,74,0.2);  border-color: #16a34a; }
-.card-min:hover { box-shadow: 0 6px 24px rgba(37,99,235,0.2);  border-color: #2563eb; }
+.card-max:hover {
+  box-shadow: 0 6px 24px rgba(163, 206, 241, 0.5);
+  border-color: var(--color-primario);
+}
 
-.icono-max { color: #16a34a; font-size: 2rem; }
-.icono-min { color: #2563eb; font-size: 2rem; }
+.card-min:hover {
+  box-shadow: 0 6px 24px rgba(203, 180, 245, 0.5);
+  border-color: var(--color-interaccion);
+}
+
+.icono-max { color: var(--color-primario-hover); font-size: 2rem; }
+.icono-min { color: var(--color-interaccion-hover); font-size: 2rem; }
 
 .card-metodo h4 { font-weight: 700; margin: 12px 0 6px; }
-.card-metodo p  { font-size: 0.88rem; color: #64748b; margin: 0; }
+.card-metodo p  { font-size: 0.88rem; color: #1a1a1a; margin: 0; }
 
 /* Secciones internas */
 .card-seccion {
-  background-color: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
+  background-color: var(--color-tarjeta);
+  border: 1.5px solid var(--color-borde);
+  border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
 }
@@ -71,25 +94,33 @@ body {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #64748b;
+  color: var(--color-texto);
   margin-bottom: 16px;
+  opacity: 0.75;
 }
 
 /* Inputs */
 .form-control,
 .form-select {
-  background-color: #f8fafc !important;
-  border-color: #cbd5e1 !important;
-  color: #1e293b !important;
+  background-color: var(--color-superficie) !important;
+  border-color: var(--color-borde) !important;
+  color: var(--color-texto) !important;
   border-radius: 8px;
 }
 
-.form-control::placeholder { color: #94a3b8; }
+.form-control::placeholder { color: #444444; }
 
-.focus-max:focus { box-shadow: 0 0 0 3px rgba(22,163,74,0.15) !important;  border-color: #16a34a !important; }
-.focus-min:focus { box-shadow: 0 0 0 3px rgba(37,99,235,0.15) !important;  border-color: #2563eb !important; }
+.focus-max:focus {
+  box-shadow: 0 0 0 3px rgba(163, 206, 241, 0.45) !important;
+  border-color: var(--color-primario) !important;
+}
 
-.form-select option { background: #ffffff; }
+.focus-min:focus {
+  box-shadow: 0 0 0 3px rgba(203, 180, 245, 0.45) !important;
+  border-color: var(--color-interaccion) !important;
+}
+
+.form-select option { background: var(--color-superficie); }
 
 /* Fila de restricción */
 .fila-restriccion {
@@ -97,8 +128,8 @@ body {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
   border-radius: 8px;
   padding: 10px 12px;
   margin-bottom: 10px;
@@ -108,39 +139,48 @@ body {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #94a3b8;
+  color: var(--color-interaccion-hover);
   font-weight: 700;
   min-width: 20px;
 }
 
-.texto-op { color: #64748b; font-size: 0.9rem; }
+.texto-op { color: #1a1a1a; font-size: 0.9rem; }
 
 /* Botones resolver */
 .btn-resolver {
   font-weight: 700;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   width: 100%;
   padding: 12px;
   font-size: 1rem;
-  color: #ffffff;
+  color: var(--color-texto);
+  letter-spacing: 0.3px;
 }
 
 .btn-resolver:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.btn-max { background-color: #16a34a; }
-.btn-max:hover:not(:disabled) { background-color: #15803d; }
+.btn-max { background-color: var(--color-primario); }
+.btn-max:hover:not(:disabled) { background-color: var(--color-primario-hover); color: #ffffff; }
 
-.btn-min { background-color: #2563eb; }
-.btn-min:hover:not(:disabled) { background-color: #1d4ed8; }
+.btn-min { background-color: var(--color-interaccion); }
+.btn-min:hover:not(:disabled) { background-color: var(--color-interaccion-hover); color: #ffffff; }
+
+/* Resultado */
+#resultadoBox { transition: opacity 0.3s; }
+#resultadoBox.activo {
+  border-color: var(--color-exito);
+  background-color: var(--color-exito);
+  opacity: 1 !important;
+}
 
 /* Footer */
 footer {
   text-align: center;
   padding: 16px;
   font-size: 0.8rem;
-  color: #94a3b8;
-  border-top: 1px solid #cbd5e1;
-  background-color: #ffffff;
+  color: #1a1a1a;
+  border-top: 1px solid var(--color-borde);
+  background-color: var(--color-footer);
   margin-top: 40px;
 }

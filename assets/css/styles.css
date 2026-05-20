@@ -1,12 +1,11 @@
 /* =============================================
    Investigación de Operaciones — styles.css
-   Versión Precisión Académica · Paleta Pastel
    ============================================= */
 
 :root {
-  --color-fondo:             #CDD4DC;   /* gris azulado medio — fondo general */
-  --color-superficie:        #D8DFE6;   /* inputs y filas */
-  --color-tarjeta:           #E2E7ED;   /* cards */
+  --color-fondo:             #CDD4DC;
+  --color-superficie:        #D8DFE6;
+  --color-tarjeta:           #E2E7ED;
   --color-texto:             #111111;
   --color-primario:          #A3CEF1;
   --color-interaccion:       #CBB4F5;
@@ -122,6 +121,22 @@ body {
 
 .form-select option { background: var(--color-superficie); }
 
+/* ── Input numérico de configuración libre ── */
+.config-num-input {
+  width: 80px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-radius: 8px;
+}
+
+/* Hint de rango debajo del input */
+.config-hint {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
 /* Fila de restricción */
 .fila-restriccion {
   display: flex;
@@ -141,7 +156,7 @@ body {
   letter-spacing: 1px;
   color: var(--color-interaccion-hover);
   font-weight: 700;
-  min-width: 20px;
+  min-width: 24px;
 }
 
 .texto-op { color: #1a1a1a; font-size: 0.9rem; }
@@ -156,6 +171,7 @@ body {
   font-size: 1rem;
   color: var(--color-texto);
   letter-spacing: 0.3px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .btn-resolver:disabled { opacity: 0.45; cursor: not-allowed; }
@@ -166,12 +182,156 @@ body {
 .btn-min { background-color: var(--color-interaccion); }
 .btn-min:hover:not(:disabled) { background-color: var(--color-interaccion-hover); color: #ffffff; }
 
+/* ── Spinner de carga ── */
+.spinner-overlay {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  background: var(--color-tarjeta);
+  border: 1.5px solid var(--color-borde);
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.spinner-overlay.visible {
+  display: flex;
+}
+
+.spinner-ring {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--color-borde);
+  border-top-color: var(--color-primario-hover);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+.spinner-ring.min {
+  border-top-color: var(--color-interaccion-hover);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Resultado */
 #resultadoBox { transition: opacity 0.3s; }
 #resultadoBox.activo {
   border-color: var(--color-exito);
   background-color: var(--color-exito);
   opacity: 1 !important;
+}
+
+/* ── Mejoras de tabla iterativa ── */
+
+/* Encabezado de iteración con contador */
+.iter-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.iter-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: var(--color-navbar);
+  color: var(--color-texto);
+  flex-shrink: 0;
+}
+
+.iter-titulo {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Celda pivote: borde más grueso y fondo más intenso */
+.celda-pivote {
+  background: var(--color-interaccion) !important;
+  font-weight: 900 !important;
+  outline: 2.5px solid #9b74e8;
+  outline-offset: -2px;
+  position: relative;
+}
+
+/* Columna pivote: tinte suave */
+.col-pivote-bg {
+  background: rgba(203, 180, 245, 0.18) !important;
+}
+
+/* Fila pivote: tinte suave */
+.fila-pivote-bg {
+  background: rgba(203, 180, 245, 0.14) !important;
+  font-weight: 600;
+}
+
+/* Fila Zj */
+.fila-zj {
+  background: var(--color-fondo) !important;
+  border-top: 2px solid var(--color-borde);
+}
+
+/* Fila Cj-Zj (max) */
+.fila-cjzj-max {
+  background: rgba(163, 206, 241, 0.18) !important;
+}
+
+/* Fila Cj-Zj (min) */
+.fila-cjzj-min {
+  background: rgba(203, 180, 245, 0.15) !important;
+}
+
+/* Colores semánticos en cj-zj */
+.cjzj-positivo { color: #16803d; font-weight: 700; }
+.cjzj-negativo { color: #b91c1c; font-weight: 700; }
+
+/* Razones */
+.col-razon {
+  background: var(--color-fondo) !important;
+  color: #555;
+}
+
+/* Barra de resumen de iteraciones */
+.iter-resumen-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.iter-resumen-bar.inicial {
+  background: rgba(163, 206, 241, 0.18);
+  border: 1px solid var(--color-primario);
+}
+
+.iter-resumen-bar.pivote {
+  background: rgba(203, 180, 245, 0.15);
+  border: 1px solid var(--color-interaccion);
+}
+
+.iter-resumen-bar.optimo {
+  background: rgba(201, 247, 245, 0.4);
+  border: 1px solid var(--color-exito);
+}
+
+/* Contador total de iteraciones */
+.resumen-iter-total {
+  font-size: 0.8rem;
+  color: #555;
+  margin-bottom: 12px;
 }
 
 /* Footer */

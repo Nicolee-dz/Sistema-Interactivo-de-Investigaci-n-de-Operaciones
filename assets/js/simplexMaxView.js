@@ -592,10 +592,10 @@ window.analizarNoBasica = function() {
 
     <div class="alert alert-info">
 
-      El coeficiente de Z de
+      El coeficiente en Z de
       <strong>${variable}</strong>
 
-      puede variar en:
+      puede variar entre:
 
       <br><br>
 
@@ -670,10 +670,10 @@ window.analizarBasica = function() {
 
     <div class="alert alert-warning">
 
-      El coeficiente de Z de
+      El coeficiente en Z de
       <strong>${variable}</strong>
 
-      puede variar en:
+      puede variar entre:
 
       <br><br>
 

@@ -577,6 +577,10 @@ window.analizarNoBasica = function() {
   const variable =
     document.getElementById('variableNoBasica').value;
 
+  const j = ultimosEncabezados.indexOf(variable);
+
+  const zj = ultimoZjCj[j];
+
   document.getElementById('resultadoSensibilidad').innerHTML = `
 
     <div class="alert alert-info">
@@ -584,56 +588,110 @@ window.analizarNoBasica = function() {
       El coeficiente de Z de
       <strong>${variable}</strong>
 
-      puede variar mientras:
+      puede variar en el rango:
 
-      <strong>Cj - Zj ≤ 0</strong>
+      <br><br>
+
+      <strong>( -∞ , ${fmt(zj)} ]</strong>
+
+      <br><br>
+
+      sin alterar la solución óptima actual.
 
     </div>
   `;
 };
-
 
 window.analizarBasica = function() {
 
   const variable =
     document.getElementById('variableBasica').value;
 
+  const j = ultimosEncabezados.indexOf(variable);
+
+  const col = ultimaTablaFinal.map(f => f[j]);
+
+  const rhs =
+    ultimaTablaFinal.map(f => f[f.length - 1]);
+
+  let min = -Infinity;
+  let max = Infinity;
+
+  for (let i = 0; i < col.length; i++) {
+
+    if (col[i] !== 0) {
+
+      const val = rhs[i] / col[i];
+
+      if (col[i] > 0) {
+
+        max = Math.min(max, val);
+
+      } else {
+
+        min = Math.max(min, val);
+      }
+    }
+  }
+
   document.getElementById('resultadoSensibilidad').innerHTML = `
 
     <div class="alert alert-warning">
 
-      La variable básica
+      El coeficiente de Z de
       <strong>${variable}</strong>
 
-      puede cambiar mientras la base siga siendo factible.
+      puede variar en:
+
+      <br><br>
+
+      <strong>
+        [ ${fmt(min)} , ${fmt(max)} ]
+      </strong>
+
+      <br><br>
+
+      sin cambiar la base óptima.
 
     </div>
   `;
 };
-
 
 window.analizarBJ = function() {
 
   const indice =
     parseInt(document.getElementById('restriccionBJ').value);
 
-  const valorActual = ultimoB[indice];
+  const fila = ultimaTablaFinal[indice];
+
+  const rhs = fila[fila.length - 1];
+
+  let min = 0;
+  let max = Infinity;
+
+  if (fila[indice] !== 0) {
+
+    max = rhs / fila[indice];
+  }
 
   document.getElementById('resultadoSensibilidad').innerHTML = `
 
     <div class="alert alert-success">
 
-      Restricción seleccionada:
-      <strong>${indice + 1}</strong>
+      El valor b<sub>${indice + 1}</sub>
+
+      puede variar en el rango:
 
       <br><br>
 
-      Valor actual:
-      <strong>${fmt(valorActual)}</strong>
+      <strong>
+        [ ${fmt(min)} , ${fmt(max)} ]
+      </strong>
 
       <br><br>
 
-      El rango permitido mantiene la factibilidad.
+      manteniendo la factibilidad y
+      la solución óptima actual.
 
     </div>
   `;

@@ -105,12 +105,23 @@ class simplexMinModel extends simplexBaseModel {
     const zjFinal = this._calcularZjReal(tabla, cb, numVar, numHolguras, numArtific);
     const zOptimo = zjFinal;
 
-    const zj = this.calcularZj(tabla, cb);
+    const zjFinal = this.calcularZj(tabla, cb);
 
-    const zj_cj = funcionObj.map((c, j) => zj[j] - c);
+    const zj_cjFinal =
+      funcionObj.map((c, j) => zjFinal[j] - c);
+
+    const B =
+      this.construirMatrizBase(
+        tabla,
+        base,
+        encabezados
+      );
+
+const B_INV =
+  this.invertirMatriz(B);
 
     return {
-      zOptimo: zj[tabla[0].length - 1],
+      zOptimo: zjFinal[tabla[0].length - 1],
       variables: solucion,
       pasos,
       encabezados,
@@ -119,9 +130,12 @@ class simplexMinModel extends simplexBaseModel {
       tablaFinal: tabla,
       cbFinal: cb,
       baseFinal: base,
-      zjFinal: zj,
+      zjFinal: zjFinal,
       cjFinal: funcionObj,
-      zj_cjFinal: zj_cj
+      zj_cjFinal: zj_cjFinal,
+      B: B,
+      B_INV: B_INV
+      
     };
   }
 

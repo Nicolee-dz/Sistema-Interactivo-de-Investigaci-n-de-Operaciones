@@ -653,11 +653,11 @@ window.analizarBasica = function() {
 
         if (suma > 0) {
 
-          max = Math.min(max, limite);
+          min = Math.min(max, limite);
 
         } else {
 
-          min = Math.max(min, limite);
+          max = Math.max(min, limite);
         }
       }
     }

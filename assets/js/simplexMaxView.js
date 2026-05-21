@@ -1,6 +1,8 @@
 // ============================================================
 // assets/js/simplexMaxView.js
 // ============================================================
+import { simplexMax } from './simplexCore.js';
+
 let ultimaTablaFinal = null;
 let ultimosEncabezados = null;
 let ultimaBase = null;

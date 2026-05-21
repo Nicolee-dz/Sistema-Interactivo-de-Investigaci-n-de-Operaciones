@@ -22,13 +22,13 @@ class simplexMaxModel extends simplexBaseModel {
     const solucion = {};
     for (let j = 0; j < numVar; j++) solucion['x' + (j + 1)] = 0;
     for (let i = 0; i < base.length; i++) solucion[base[i]] = Math.max(0, tabla[i][tabla[0].length - 1]);
-    const zj = this.calcularZj(tabla, cb);
-    const zj = this.calcularZj(tabla, cb);
+    const zjFinal = this.calcularZj(tabla, cb);
 
-    const zj_cj = funcionObj.map((c, j) => zj[j] - c);
+    const zj_cjFinal =
+      funcionObj.map((c, j) => zjFinal[j] - c);
 
     return {
-      zOptimo: zj[tabla[0].length - 1],
+      zOptimo: zjFinal[tabla[0].length - 1],
       variables: solucion,
       pasos,
       encabezados,
@@ -37,9 +37,9 @@ class simplexMaxModel extends simplexBaseModel {
       tablaFinal: tabla,
       cbFinal: cb,
       baseFinal: base,
-      zjFinal: zj,
+      zjFinal: zjFinal,
       cjFinal: funcionObj,
-      zj_cjFinal: zj_cj
+      zj_cjFinal: zj_cjFinal
     };
   }
   _capturarPaso(tabla, cb, base, funcionObj, encabezados, filaPivote, colPivote, iteracion) {

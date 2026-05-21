@@ -185,12 +185,13 @@ document.addEventListener('DOMContentLoaded', () => {
       .join('');
 
     const totalIter = resultado.pasos.length - 1;
-    const data = resultado;
-    ultimaTablaFinal = data.tablaFinal;
-    ultimosEncabezados = data.encabezados;
-    ultimaBase = data.baseFinal;
-    ultimoZjCj = data.zj_cjFinal;
-    ultimoCb = data.cbFinal;
+    const ultimoPaso = resultado.pasos[resultado.pasos.length - 1];
+
+    ultimaTablaFinal = ultimoPaso.tabla;
+    ultimosEncabezados = resultado.encabezados;
+    ultimaBase = ultimoPaso.base;
+    ultimoZjCj = ultimoPaso.cj_zj;
+    ultimoB = ultimoPaso.tabla.map(f => f[f.length - 1]);
 
     box.innerHTML = `
   <h5><i class="bi bi-trophy me-2"></i>Solución Óptima</h5>
@@ -251,6 +252,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   </div>
 `;
+   const data = resultado;
+   ultimaTablaFinal = data.tablaFinal;
+   ultimosEncabezados = data.encabezados;
+   ultimaBase = data.baseFinal;
+   ultimoZjCj = data.zj_cjFinal;
+   ultimoCb = data.cbFinal;
   }
 
   // ── Tablas paso a paso ──────────────────────────────────────

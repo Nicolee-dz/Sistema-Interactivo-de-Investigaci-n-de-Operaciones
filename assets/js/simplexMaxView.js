@@ -1,13 +1,14 @@
 // ============================================================
 // assets/js/simplexMaxView.js
 // ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-
-  let ultimaTablaFinal = null;
+let ultimaTablaFinal = null;
   let ultimosEncabezados = null;
   let ultimaBase = null;
   let ultimoZjCj = null;
   let ultimoCb = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  
   const inputVars   = document.getElementById('numVars');
   const inputRes    = document.getElementById('numRes');
   const btnAplicar  = document.getElementById('btnAplicar');

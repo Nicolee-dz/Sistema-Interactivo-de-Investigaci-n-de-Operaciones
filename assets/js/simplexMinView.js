@@ -7,6 +7,9 @@ let ultimaBase = null;
 let ultimoZjCj = null;
 let ultimoCb = null;
 let ultimaBInv = null;
+let ultimaA = null;
+let ultimocB = null;
+let ultimoCj = null;
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -196,6 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ultimoZjCj = data.zj_cjFinal;
     ultimoCb = data.cbFinal;
     ultimaBInv = data.B_INV;
+    ultimaA = data.A;
+    ultimocB = data.cB;
+    ultimoCj = data.cjFinal;
 
     box.innerHTML = `
   <h5><i class="bi bi-trophy me-2"></i>Solución Óptima</h5>
@@ -570,87 +576,117 @@ window.analizarNoBasica = function() {
   const variable =
     document.getElementById('variableNoBasica').value;
 
-  const j = ultimosEncabezados.indexOf(variable);
+  const j =
+    ultimosEncabezados.indexOf(variable);
 
-  const zj = ultimoZjCj[j];
+  const reducedCost =
+    ultimoCj[j] - ultimoZjCj[j];
+
+  const limiteSuperior =
+    ultimoCj[j] - reducedCost;
 
   document.getElementById('resultadoSensibilidad').innerHTML = `
 
     <div class="alert alert-info">
 
-      El coeficiente de Z de
+      El coeficiente en Z de
       <strong>${variable}</strong>
 
-      puede variar en el rango:
+      puede variar entre:
 
       <br><br>
 
-      <strong>( -∞ , ${fmt(zj)} ]</strong>
+      <strong>
+        ( -∞ ,
+        ${fmt(limiteSuperior)}
+        ]
+      </strong>
 
       <br><br>
 
-      sin alterar la solución óptima actual.
+      sin cambiar la solución óptima.
 
     </div>
   `;
 };
-
 
 window.analizarBasica = function() {
 
   const variable =
     document.getElementById('variableBasica').value;
 
-  const j = ultimosEncabezados.indexOf(variable);
+  const indiceBase =
+    ultimaBase.indexOf(variable);
 
-  const col = ultimaTablaFinal.map(f => f[j]);
-
-  const rhs =
-    ultimaTablaFinal.map(f => f[f.length - 1]);
+  const filaBinv =
+    ultimaBInv[indiceBase];
 
   let min = -Infinity;
   let max = Infinity;
 
-  for (let i = 0; i < col.length; i++) {
+  for (let j = 0; j < ultimosEncabezados.length; j++) {
 
-    if (col[i] !== 0) {
+    const nombre =
+      ultimosEncabezados[j];
 
-      const val = rhs[i] / col[i];
+    if (!ultimaBase.includes(nombre)) {
 
-      if (col[i] > 0) {
+      let suma = 0;
 
-        max = Math.min(max, val);
+      for (let k = 0; k < filaBinv.length; k++) {
 
-      } else {
+        suma +=
+          filaBinv[k] *
+          ultimaA[k][j];
+      }
 
-        min = Math.max(min, val);
+      const reduced =
+        ultimoCj[j] - ultimoZjCj[j];
+
+      if (Math.abs(suma) > 1e-9) {
+
+        const limite =
+          reduced / suma;
+
+        if (suma > 0) {
+
+          min = Math.min(max, limite);
+
+        } else {
+
+          max = Math.max(min, limite);
+        }
       }
     }
   }
+
+  const actual =
+    ultimocB[indiceBase];
 
   document.getElementById('resultadoSensibilidad').innerHTML = `
 
     <div class="alert alert-warning">
 
-      El coeficiente de Z de
+      El coeficiente en Z de
       <strong>${variable}</strong>
 
-      puede variar en:
+      puede variar entre:
 
       <br><br>
 
       <strong>
-        [ ${fmt(min)} , ${fmt(max)} ]
+        ${fmt(actual + min)}
+        ≤ c ≤
+        ${fmt(actual + max)}
       </strong>
 
       <br><br>
 
-      sin cambiar la base óptima.
+      sin alterar la base óptima.
 
     </div>
   `;
 };
-
 
 window.analizarBJ = function() {
 

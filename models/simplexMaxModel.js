@@ -37,6 +37,12 @@ class simplexMaxModel extends simplexBaseModel {
     const B_INV =
       this.invertirMatriz(B);
 
+    const A = tabla.map(f =>
+      f.slice(0, encabezados.length)
+    );
+
+const cB = cb;
+
     return {
       zOptimo: zjFinal[tabla[0].length - 1],
       variables: solucion,
@@ -51,7 +57,9 @@ class simplexMaxModel extends simplexBaseModel {
       cjFinal: funcionObj,
       zj_cjFinal: zj_cjFinal,
       B: B,
-      B_INV: B_INV
+      B_INV: B_INV,
+      A: A,
+      cB: cB
     };
   }
   _capturarPaso(tabla, cb, base, funcionObj, encabezados, filaPivote, colPivote, iteracion) {

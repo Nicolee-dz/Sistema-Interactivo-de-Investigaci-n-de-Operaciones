@@ -92,58 +92,44 @@ class simplexMinModel extends simplexBaseModel {
     }
 
     // ── 6. Extraer solución ───────────────────────────────────
-    const solucion = {};
-    for (let j = 0; j < numVar; j++) solucion['x' + (j + 1)] = 0;
-    for (let i = 0; i < base.length; i++) {
-      if (base[i].startsWith('x')) {
-        const val = tabla[i][totalCols - 1];
-        solucion[base[i]] = Math.max(0, Math.round(val * 1e9) / 1e9);
-      }
-    }
+const solucion = {};
+for (let j = 0; j < numVar; j++) solucion['x' + (j + 1)] = 0;
+for (let i = 0; i < base.length; i++) {
+  if (base[i].startsWith('x')) {
+    const val = tabla[i][totalCols - 1];
+    solucion[base[i]] = Math.max(0, Math.round(val * 1e9) / 1e9);
+  }
+}
 
-    // zOptimo = Zj del RHS (última columna), ignorando contribución de artificiales
-    const zjFinal = this._calcularZjReal(tabla, cb, numVar, numHolguras, numArtific);
-    const zOptimo = zjFinal;
+// Z real (ignorando artificiales)
+const zReal = this._calcularZjReal(tabla, cb, numVar, numHolguras, numArtific);
 
-    const zjFinal = this.calcularZj(tabla, cb);
+// Vector Zj completo (necesario para análisis de sensibilidad y tabla)
+const zjVector = this.calcularZj(tabla, cb);
 
-    const zj_cjFinal =
-      funcionObj.map((c, j) => zjFinal[j] - c);
+const zj_cjFinal = funcionObj.map((c, j) => zjVector[j] - c);
 
-    const B =
-      this.construirMatrizBase(
-        tabla,
-        base,
-        encabezados
-      );
+const B = this.construirMatrizBase(tabla, base, encabezados);
+const B_INV = this.invertirMatriz(B);
+const A = tabla.map(f => f.slice(0, encabezados.length));
+const cB = cb;
 
-    const B_INV =
-      this.invertirMatriz(B);
-
-    const A = tabla.map(f =>
-      f.slice(0, encabezados.length)
-    );
-
-    const cB = cb;
-
-    return {
-      zOptimo: zjFinal[tabla[0].length - 1],
-      variables: solucion,
-      pasos,
-      encabezados,
-
-      // Información para sensibilidad
-      tablaFinal: tabla,
-      cbFinal: cb,
-      baseFinal: base,
-      zjFinal: zjFinal,
-      cjFinal: funcionObj,
-      zj_cjFinal: zj_cjFinal,
-      B: B,
-      B_INV: B_INV,
-      A: A,
-      cB: cB
-    };
+return {
+  zOptimo: zReal,                     
+  variables: solucion,
+  pasos,
+  encabezados,
+  tablaFinal: tabla,
+  cbFinal: cb,
+  baseFinal: base,
+  zjFinal: zjVector,                 
+  cjFinal: funcionObj,
+  zj_cjFinal: zj_cjFinal,
+  B: B,
+  B_INV: B_INV,
+  A: A,
+  cB: cB
+};
   }
 
   // Calcula el Z real ignorando el Big-M de las artificiales

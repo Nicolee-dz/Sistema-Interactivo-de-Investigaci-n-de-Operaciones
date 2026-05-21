@@ -1,6 +1,12 @@
 // ============================================================
 // assets/js/simplexMaxView.js
 // ============================================================
+let ultimaTablaFinal = null;
+let ultimosEncabezados = null;
+let ultimaBase = null;
+let ultimoZjCj = null;
+let ultimoB = null;
+
 document.addEventListener('DOMContentLoaded', () => {
 
   const inputVars   = document.getElementById('numVars');
@@ -153,8 +159,66 @@ document.addEventListener('DOMContentLoaded', () => {
     const box = document.getElementById('resultadoBox');
     box.style.cssText = 'opacity:0.4;';
     box.classList.remove('activo');
-    box.innerHTML = `<h5><i class="bi bi-trophy me-2"></i>Resultado</h5>
-                     <p class="mb-0 small">El resultado aparecerá aquí.</p>`;
+    box.innerHTML =  `
+  <h5><i class="bi bi-trophy me-2"></i>Solución Óptima</h5>
+
+  <div class="mb-3 p-3 rounded" style="background:rgba(163,206,241,0.25); border:1px solid var(--color-primario);">
+    <div class="fw-bold mb-1" style="font-size:1.3rem;">
+      Z<sub>max</sub> = ${fmt(resultado.zOptimo)}
+    </div>
+    <div>${vars}</div>
+  </div>
+
+  <hr/>
+
+  <h6 class="fw-bold mb-1">
+    <i class="bi bi-table me-2"></i>
+    Proceso iterativo — Paso a paso
+  </h6>
+
+  <p class="resumen-iter-total">
+    ${totalIter} iteración${totalIter !== 1 ? 'es' : ''} hasta la solución óptima
+  </p>
+
+  ${renderPasos(resultado.pasos, resultado.encabezados)}
+
+  <hr/>
+
+  ${renderResumenFinal(resultado)}
+
+  <div class="analisis-sensibilidad mt-4">
+
+    <h5 class="fw-bold">
+      <i class="bi bi-graph-up me-2"></i>
+      Análisis de Sensibilidad
+    </h5>
+
+    <label class="fw-bold">Seleccione una opción:</label>
+
+    <select id="tipoSensibilidad" class="form-select mb-3"
+            onchange="mostrarOpcionesSensibilidad()">
+
+      <option value="">Seleccione...</option>
+
+      <option value="nobasica">
+        Cambiar coeficiente Z de variable NO básica
+      </option>
+
+      <option value="basica">
+        Cambiar coeficiente Z de variable básica
+      </option>
+
+      <option value="bj">
+        Cambiar valor b_j de una restricción
+      </option>
+
+    </select>
+
+    <div id="contenedorSensibilidad"></div>
+
+  </div>
+`;
+    
   }
 
   function mostrarResultado(resultado) {
@@ -180,6 +244,14 @@ document.addEventListener('DOMContentLoaded', () => {
       .join('');
 
     const totalIter = resultado.pasos.length - 1;
+
+    const ultimoPaso = resultado.pasos[resultado.pasos.length - 1];
+
+    ultimaTablaFinal = ultimoPaso.tabla;
+    ultimosEncabezados = resultado.encabezados;
+    ultimaBase = ultimoPaso.base;
+    ultimoZjCj = ultimoPaso.cj_zj;
+    ultimoB = ultimoPaso.tabla.map(f => f[f.length - 1]);
 
     box.innerHTML = `
       <h5><i class="bi bi-trophy me-2"></i>Solución Óptima</h5>
@@ -406,6 +478,176 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>`;
   }
 
+  window.mostrarOpcionesSensibilidad = function() {
+
+  const tipo = document.getElementById('tipoSensibilidad').value;
+  const contenedor = document.getElementById('contenedorSensibilidad');
+
+  contenedor.innerHTML = '';
+
+  if (tipo === 'nobasica') {
+
+    let html = `
+      <label>Variable NO básica:</label>
+
+      <select id="variableNoBasica" class="form-select mb-2">
+    `;
+
+    ultimosEncabezados.forEach(v => {
+
+      if (!ultimaBase.includes(v)) {
+
+        html += `<option value="${v}">${v}</option>`;
+      }
+    });
+
+    html += `
+      </select>
+
+      <button class="btn btn-primary"
+              onclick="analizarNoBasica()">
+
+        Calcular rango
+
+      </button>
+
+      <div id="resultadoSensibilidad" class="mt-3"></div>
+    `;
+
+    contenedor.innerHTML = html;
+  }
+
+  else if (tipo === 'basica') {
+
+    let html = `
+      <label>Variable básica:</label>
+
+      <select id="variableBasica" class="form-select mb-2">
+    `;
+
+    ultimaBase.forEach(v => {
+
+      html += `<option value="${v}">${v}</option>`;
+    });
+
+    html += `
+      </select>
+
+      <button class="btn btn-primary"
+              onclick="analizarBasica()">
+
+        Calcular rango
+
+      </button>
+
+      <div id="resultadoSensibilidad" class="mt-3"></div>
+    `;
+
+    contenedor.innerHTML = html;
+  }
+
+  else if (tipo === 'bj') {
+
+    let html = `
+      <label>Restricción:</label>
+
+      <select id="restriccionBJ" class="form-select mb-2">
+    `;
+
+    for (let i = 0; i < ultimaBase.length; i++) {
+
+      html += `
+        <option value="${i}">
+          Restricción ${i + 1}
+        </option>
+      `;
+    }
+
+    html += `
+      </select>
+
+      <button class="btn btn-primary"
+              onclick="analizarBJ()">
+
+        Calcular rango
+
+      </button>
+
+      <div id="resultadoSensibilidad" class="mt-3"></div>
+    `;
+
+    contenedor.innerHTML = html;
+  }
+};
+
+
+window.analizarNoBasica = function() {
+
+  const variable =
+    document.getElementById('variableNoBasica').value;
+
+  document.getElementById('resultadoSensibilidad').innerHTML = `
+
+    <div class="alert alert-info">
+
+      El coeficiente de Z de
+      <strong>${variable}</strong>
+
+      puede variar mientras:
+
+      <strong>Cj - Zj ≤ 0</strong>
+
+    </div>
+  `;
+};
+
+
+window.analizarBasica = function() {
+
+  const variable =
+    document.getElementById('variableBasica').value;
+
+  document.getElementById('resultadoSensibilidad').innerHTML = `
+
+    <div class="alert alert-warning">
+
+      La variable básica
+      <strong>${variable}</strong>
+
+      puede cambiar mientras la base siga siendo factible.
+
+    </div>
+  `;
+};
+
+
+window.analizarBJ = function() {
+
+  const indice =
+    parseInt(document.getElementById('restriccionBJ').value);
+
+  const valorActual = ultimoB[indice];
+
+  document.getElementById('resultadoSensibilidad').innerHTML = `
+
+    <div class="alert alert-success">
+
+      Restricción seleccionada:
+      <strong>${indice + 1}</strong>
+
+      <br><br>
+
+      Valor actual:
+      <strong>${fmt(valorActual)}</strong>
+
+      <br><br>
+
+      El rango permitido mantiene la factibilidad.
+
+    </div>
+  `;
+};
+  
   function fmt(valor) {
 
   if (valor === null || valor === undefined || isNaN(valor)) {

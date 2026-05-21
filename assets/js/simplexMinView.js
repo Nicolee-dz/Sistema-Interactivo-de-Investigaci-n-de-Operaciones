@@ -6,6 +6,7 @@ let ultimosEncabezados = null;
 let ultimaBase = null;
 let ultimoZjCj = null;
 let ultimoCb = null;
+let ultimaBInv = null;
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -194,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ultimaBase = data.baseFinal;
     ultimoZjCj = data.zj_cjFinal;
     ultimoCb = data.cbFinal;
+    ultimaBInv = data.B_INV;
 
     box.innerHTML = `
   <h5><i class="bi bi-trophy me-2"></i>Solución Óptima</h5>
@@ -655,41 +657,56 @@ window.analizarBJ = function() {
   const indice =
     parseInt(document.getElementById('restriccionBJ').value);
 
-  const fila = ultimaTablaFinal[indice];
+  const columna =
+    ultimaBInv.map(f => f[indice]);
 
-  const rhs = fila[fila.length - 1];
+  const xb =
+    ultimaTablaFinal.map(
+      f => f[f.length - 1]
+    );
 
-  let min = 0;
+  let min = -Infinity;
   let max = Infinity;
 
-  if (fila[indice] !== 0) {
+  for (let i = 0; i < columna.length; i++) {
 
-    max = rhs / fila[indice];
+    if (Math.abs(columna[i]) > 1e-9) {
+
+      const ratio = -xb[i] / columna[i];
+
+      if (columna[i] > 0) {
+
+        min = Math.max(min, ratio);
+
+      } else {
+
+        max = Math.min(max, ratio);
+      }
+    }
   }
 
   document.getElementById('resultadoSensibilidad').innerHTML = `
 
     <div class="alert alert-success">
 
-      El valor b<sub>${indice + 1}</sub>
-
-      puede variar en el rango:
+      El cambio permitido para b<sub>${indice + 1}</sub> es:
 
       <br><br>
 
       <strong>
-        [ ${fmt(min)} , ${fmt(max)} ]
+        ${fmt(min)}
+        ≤ Δb ≤
+        ${fmt(max)}
       </strong>
 
       <br><br>
 
-      manteniendo la factibilidad y
-      la solución óptima actual.
+      sin alterar la base óptima.
 
     </div>
   `;
 };
-
+  
   function fmt(valor) {
 
   if (valor === null || valor === undefined || isNaN(valor)) {

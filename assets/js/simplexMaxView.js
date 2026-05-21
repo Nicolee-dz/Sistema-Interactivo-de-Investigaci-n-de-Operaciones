@@ -251,12 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   </div>
 `;
-   const data = resultado;
-   ultimaTablaFinal = data.tablaFinal;
-   ultimosEncabezados = data.encabezados;
-   ultimaBase = data.baseFinal;
-   ultimoZjCj = data.zj_cjFinal;
-   ultimoCb = data.cbFinal;
   }
 
   // ── Tablas paso a paso ──────────────────────────────────────

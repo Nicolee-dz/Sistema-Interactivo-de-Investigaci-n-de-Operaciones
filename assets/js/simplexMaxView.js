@@ -1,7 +1,7 @@
 // ============================================================
 // assets/js/simplexMaxView.js
 // ============================================================
-let ultimaTablaFinal = null;
+  let ultimaTablaFinal = null;
   let ultimosEncabezados = null;
   let ultimaBase = null;
   let ultimoZjCj = null;
@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ultimosEncabezados.forEach(v => {
 
-      if (!ultimaBase.includes(v)) {
+      if (ultimaBase && !ultimaBase.includes(v)) {
 
         html += `<option value="${v}">${v}</option>`;
       }

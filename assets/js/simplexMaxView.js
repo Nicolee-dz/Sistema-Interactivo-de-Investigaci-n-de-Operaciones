@@ -260,6 +260,40 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>`;
   }
 
+  function decimalAFraccion(numero) {
+
+  if (Number.isInteger(numero)) {
+    return numero.toString();
+  }
+
+  let negativo = numero < 0;
+  numero = Math.abs(numero);
+
+  let tolerancia = 1.0E-6;
+  let h1 = 1, h2 = 0;
+  let k1 = 0, k2 = 1;
+  let b = numero;
+
+  do {
+    let a = Math.floor(b);
+
+    let aux = h1;
+    h1 = a * h1 + h2;
+    h2 = aux;
+
+    aux = k1;
+    k1 = a * k1 + k2;
+    k2 = aux;
+
+    b = 1 / (b - a);
+
+  } while (Math.abs(numero - h1 / k1) > numero * tolerancia);
+
+  let resultado = `${h1}/${k1}`;
+
+  return negativo ? `-${resultado}` : resultado;
+  }
+  
   function renderTablaPaso(paso, encabezados, tipo) {
     const { tabla, cb, base, zj, cj_zj, razones, colPivote, filaPivote } = paso;
     const cols = encabezados.length;
@@ -372,11 +406,17 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>`;
   }
 
-  function fmt(n) {
-    if (n === null || n === undefined) return '—';
-    const r = Math.round(n * 1e6) / 1e6;
-    if (Math.abs(r) > 1e5) return r.toExponential(2);
-    return Number.isInteger(r) ? r.toString() : parseFloat(r.toFixed(4)).toString();
+  function fmt(valor) {
+
+  if (valor === null || valor === undefined || isNaN(valor)) {
+    return '—';
+  }
+
+  if (Math.abs(valor - Math.round(valor)) < 1e-9) {
+    return Math.round(valor).toString();
+  }
+
+  return decimalAFraccion(valor);
   }
 
 });
